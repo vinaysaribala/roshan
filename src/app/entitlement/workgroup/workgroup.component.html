@@ -1,0 +1,53 @@
+<div id="workgroup">
+        <h2>Workgroup Viewer</h2>
+        <div class="ui-g">A search page to view Work Groups in Sailpoint IIQ</div>
+        <div class="ui-g">
+            <div class="ui-g-12">
+                <p-autoComplete [(ngModel)]="selectedSuggestion" [suggestions]="suggestions"
+                    (completeMethod)="search($event)" field="displayName"></p-autoComplete>
+                <button type="button" *ngIf="selectedSuggestion" pButton icon="pi pi-find" iconPos="left" label="Search"
+                    (click)="search(undefined)"></button>
+            </div>
+        </div>
+        <div class="ui-g" *ngIf="displayTable && suggestions && suggestions.length > 0">
+            <p-table #dt [columns]="cols" [value]="suggestions" [paginator]="true" sortMode="single" [rows]="10"
+                [rowsPerPageOptions]="[5,10,20]" [pageLinks]="3" [responsive]=true selectionMode="multiple" [(selection)]="selectedEntitlements">
+                <ng-template pTemplate="caption">
+                    <div class="ui-g">
+                        <div class="ui-g-8"></div>
+                        <div class="ui-g-4">
+                            <button type="button" pButton icon="pi pi-file-o" iconPos="left" label="Download"
+                                (click)="dt.exportCSV()" style="float:right"></button>
+                            <button *ngIf="selectedEntitlements && selectedEntitlements.length > 0" type="button" pButton icon="pi pi-file-o" iconPos="left" label="Download Selection"
+                                (click)="dt.exportCSV({selectionOnly:true})" style="float:right"></button>
+                        </div>
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="header" let-columns>
+                    <tr>
+                        <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+                            {{col.header}}<p-sortIcon field="col.field"></p-sortIcon>
+                        </th>
+                    </tr>
+                    <tr>
+                        <th *ngFor="let col of columns">
+                            <input id="id_{{col.field}}" pInputText type="text" placeholder="{{col.header}}"
+                                (input)="dt.filter($event.target.value, col.field, 'contains')">
+                        </th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-rowData let-columns="columns">
+                    <tr [pSelectableRow]="rowData">
+                        <td *ngFor="let col of columns">
+                            <div *ngIf="col.field !== 'members'; else membersDisplay;">
+                                {{rowData[col.field]}}
+                            </div>
+                            <ng-template #membersDisplay>
+                                {{rowData[col.field].join(', ')}}
+                            </ng-template>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+    </div>

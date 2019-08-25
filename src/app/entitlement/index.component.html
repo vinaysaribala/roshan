@@ -1,0 +1,16 @@
+<div *ngIf="entitleMent">
+    <p-tabView>
+        <p-tabPanel [ngSwitch]="capability" [header]="capability" *ngFor="let capability of permissions; let i = index"
+            [selected]="i == 0">
+            <home *ngSwitchCase="'Home'"></home>
+            <workgroup *ngSwitchCase="'Work Groups'"></workgroup>
+            <entitlement *ngSwitchCase="'Entitlements'"></entitlement>
+            <div *ngSwitchCase="'Identity1'">
+                Identity 1
+            </div>
+            <div *ngSwitchCase="'Identity2'">
+                Identity 2
+            </div>
+        </p-tabPanel>
+    </p-tabView>
+</div>
